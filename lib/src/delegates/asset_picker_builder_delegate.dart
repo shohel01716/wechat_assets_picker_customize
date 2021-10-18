@@ -528,39 +528,170 @@ class DefaultAssetPickerBuilderDelegate
   @override
   Widget androidLayout(BuildContext context) {
     return Container(
-          margin: const EdgeInsets.only(top: 200),
-      child: FixedAppBarWrapper(
-        appBar: appBar(context),
-        body: Selector<DefaultAssetPickerProvider, bool>(
-          selector: (_, DefaultAssetPickerProvider provider) =>
-              provider.hasAssetsToDisplay,
-          builder: (_, bool hasAssetsToDisplay, __) {
-            final bool shouldDisplayAssets = hasAssetsToDisplay ||
-                (allowSpecialItemWhenEmpty &&
-                    specialItemPosition != SpecialItemPosition.none);
-            return AnimatedSwitcher(
-              duration: switchingPathDuration,
-              child: shouldDisplayAssets
-                  ? Stack(
-                      children: <Widget>[
-                        RepaintBoundary(
-                          child: Column(
-                            children: <Widget>[
-                              Expanded(child: assetsGridBuilder(context)),
-                              /*if (!isSingleAssetMode && isPreviewEnabled)
-                                bottomActionBar(context),*/
-                            ],
+          margin: const EdgeInsets.only(top: 40),
+      child: Column(
+          children: [
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    InkWell(onTap:(){
+                     // Get.back();
+                    },child: Icon(Icons.clear)),
+                  ],
+                ),
+
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Select Media',
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+
+                InkWell(onTap:(){
+                  //Get.back(result: File(image));
+                },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Done',
+                      style: TextStyle(color: Colors.deepOrangeAccent, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Divider(),
+
+            Container(
+                height: MediaQuery.of(context).size.height * 0.45,
+                child: //image != null
+                    //? Image.file(File(image), fit: BoxFit.cover,
+                    Image.asset("assets/flutter_candies_logo.png", fit: BoxFit.cover,
+                    height: MediaQuery.of(context).size.height * 0.45,
+                    width: MediaQuery.of(context).size.width)
+            ),
+
+            SizedBox(height: 10),
+
+            Container(
+              height: 56,
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: <Widget>[
+                  /*Container(
+                    width: 150,
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(
+                            color: Colors.grey.shade300,
+                            width: 2.0
+                        )
+                    ),
+                    child: pathEntitySelector(context)
+                    //appBar(context),
+                    *//*child: DropdownButtonHideUnderline(
+                        child: SizedBox(
+                          width: 120,
+                          child: DropdownButton<FileModel>(
+                            items: getItems(),
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                            isExpanded: true,
+                            onChanged: (FileModel d) {
+                              assert(d.files.length > 0);
+                              image = d.files[0];
+                              setState(() {
+                                selectedModel = d;
+                              });
+                            },
+                            value: selectedModel,
                           ),
-                        ),
-                        pathEntityListBackdrop(context),
-                        pathEntityListWidget(context),
+                        )),*//*
+                  ),*/
+
+                  pathEntitySelector(context),
+
+                  Spacer(),
+
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.deepOrangeAccent,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(7))
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(Icons.copy, size: 18, color: Colors.white,),
+                        SizedBox(width: 5,),
+                        Text("Select Multiple", style: TextStyle(color: Colors.white))
                       ],
-                    )
-                  : loadingIndicator(context),
-            );
-          },
+                    ),
+                  ),
+
+                  SizedBox(width: 10,),
+
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        border: Border.all(
+                            color: Colors.grey.shade300,
+                            width: 2.0
+                        )
+                    ),
+                    child: Icon(Icons.add_a_photo_outlined, size: 18, color: Colors.deepOrangeAccent,),
+
+                  ),
+
+                  SizedBox(width: 5),
+
+                ],
+              ),
+            ),
+
+            SizedBox(height: 10,),
+
+            SizedBox(
+              height: 278,
+              child: Selector<DefaultAssetPickerProvider, bool>(
+                selector: (_, DefaultAssetPickerProvider provider) =>
+                    provider.hasAssetsToDisplay,
+                builder: (_, bool hasAssetsToDisplay, __) {
+                  final bool shouldDisplayAssets = hasAssetsToDisplay ||
+                      (allowSpecialItemWhenEmpty &&
+                          specialItemPosition != SpecialItemPosition.none);
+                  return AnimatedSwitcher(
+                    duration: switchingPathDuration,
+                    child: shouldDisplayAssets
+                        ? Stack(
+                            children: <Widget>[
+                              RepaintBoundary(
+                                child: Column(
+                                  children: <Widget>[
+                                    Expanded(child: assetsGridBuilder(context)),
+                                    /*if (!isSingleAssetMode && isPreviewEnabled)
+                                      bottomActionBar(context),*/
+                                  ],
+                                ),
+                              ),
+                              pathEntityListBackdrop(context),
+                              pathEntityListWidget(context),
+                            ],
+                          )
+                        : loadingIndicator(context),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
-      ),
     );
   }
 

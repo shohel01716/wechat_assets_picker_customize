@@ -110,6 +110,7 @@ class PickMethod {
           maxAssets: maxAssetsCount,
           selectedAssets: assets,
           requestType: RequestType.common,
+         // themeColor: Colors.white
         );
       },
     );
