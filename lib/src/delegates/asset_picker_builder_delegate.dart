@@ -9,6 +9,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 
 import '../constants/constants.dart';
 import '../widget/builder/asset_entity_grid_item_builder.dart';
@@ -525,8 +526,12 @@ class DefaultAssetPickerBuilderDelegate
   /// 资源的预览是否启用
   bool get isPreviewEnabled => specialPickerType != SpecialPickerType.noPreview;
 
+  var selectedImage = Uint8List(1).obs;
+  
   @override
   Widget androidLayout(BuildContext context) {
+
+    
     return Container(
           margin: const EdgeInsets.only(top: 40),
       child: Column(
@@ -539,7 +544,7 @@ class DefaultAssetPickerBuilderDelegate
                   children: <Widget>[
                     InkWell(onTap:(){
                      // Get.back();
-                    },child: Icon(Icons.clear)),
+                    },child: Icon(Icons.clear, color: Colors.black,)),
                   ],
                 ),
 
@@ -548,7 +553,7 @@ class DefaultAssetPickerBuilderDelegate
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       'Select Media',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -568,14 +573,17 @@ class DefaultAssetPickerBuilderDelegate
             ),
             Divider(),
 
-            Container(
+            Obx(() => Container(
                 height: MediaQuery.of(context).size.height * 0.45,
                 child: //image != null
                     //? Image.file(File(image), fit: BoxFit.cover,
-                    Image.asset("assets/flutter_candies_logo.png", fit: BoxFit.cover,
+                selectedImage.value.length == 1 ? Image.asset("assets/flutter_candies_logo.png", fit: BoxFit.cover,
                     height: MediaQuery.of(context).size.height * 0.45,
                     width: MediaQuery.of(context).size.width)
-            ),
+                : Image.memory(selectedImage.value, fit: BoxFit.cover,
+                    height: MediaQuery.of(context).size.height * 0.45,
+                    width: MediaQuery.of(context).size.width)
+            )),
 
             SizedBox(height: 10),
 
@@ -619,19 +627,24 @@ class DefaultAssetPickerBuilderDelegate
 
                   Spacer(),
 
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        color: Colors.deepOrangeAccent,
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.all(Radius.circular(7))
-                    ),
-                    child: Row(
-                      children: <Widget>[
-                        Icon(Icons.copy, size: 18, color: Colors.white,),
-                        SizedBox(width: 5,),
-                        Text("Select Multiple", style: TextStyle(color: Colors.white))
-                      ],
+                  InkWell(
+                    onTap: (){
+
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          color: Colors.deepOrangeAccent,
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(7))
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          Icon(Icons.copy, size: 18, color: Colors.white,),
+                          SizedBox(width: 5,),
+                          Text("Select Multiple", style: TextStyle(color: Colors.white))
+                        ],
+                      ),
                     ),
                   ),
 
@@ -1134,11 +1147,14 @@ class DefaultAssetPickerBuilderDelegate
         onTap: () => provider.isSwitchingPath = !provider.isSwitchingPath,
         child: Container(
           height: appBarItemHeight,
-          constraints: BoxConstraints(maxWidth: Screens.width * 0.5),
+          constraints: BoxConstraints(maxWidth: Screens.width * .4),
           padding: const EdgeInsetsDirectional.only(start: 12.0, end: 6.0),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(999),
-            color: theme.dividerColor,
+              borderRadius: BorderRadius.circular(10.0),
+              border: Border.all(
+                  color: Colors.grey.shade300,
+                  width: 2.0
+              )
           ),
           child: Selector<DefaultAssetPickerProvider, AssetPathEntity?>(
             selector: (_, DefaultAssetPickerProvider p) => p.currentPathEntity,
@@ -1152,6 +1168,7 @@ class DefaultAssetPickerBuilderDelegate
                       style: const TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.normal,
+                        color: Colors.black
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -1162,11 +1179,6 @@ class DefaultAssetPickerBuilderDelegate
             ),
             child: Padding(
               padding: const EdgeInsetsDirectional.only(start: 5.0),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: theme.iconTheme.color!.withOpacity(0.5),
-                ),
                 child: Selector<DefaultAssetPickerProvider, bool>(
                   selector: (_, DefaultAssetPickerProvider p) =>
                       p.isSwitchingPath,
@@ -1179,10 +1191,10 @@ class DefaultAssetPickerBuilderDelegate
                   child: Icon(
                     Icons.keyboard_arrow_down,
                     size: 20.0,
-                    color: theme.colorScheme.primary,
+                    color: Colors.black,
                   ),
                 ),
-              ),
+
             ),
           ),
         ),
@@ -1251,7 +1263,7 @@ class DefaultAssetPickerBuilderDelegate
                           padding: const EdgeInsetsDirectional.only(end: 10.0),
                           child: Text(
                             pathEntity.name,
-                            style: const TextStyle(fontSize: 18.0),
+                            style: const TextStyle(fontSize: 18.0, color:  Colors.black),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1260,7 +1272,7 @@ class DefaultAssetPickerBuilderDelegate
                       Text(
                         '(${pathEntity.assetCount})',
                         style: TextStyle(
-                          color: theme.textTheme.caption?.color,
+                          color: Colors.black,
                           fontSize: 18.0,
                         ),
                         maxLines: 1,
@@ -1279,7 +1291,7 @@ class DefaultAssetPickerBuilderDelegate
                   } else {
                     return AspectRatio(
                       aspectRatio: 1.0,
-                      child: Icon(Icons.check, color: themeColor, size: 26.0),
+                      child: Icon(Icons.check, color: Colors.deepOrangeAccent, size: 26.0),
                     );
                   }
                 },
@@ -1366,7 +1378,7 @@ class DefaultAssetPickerBuilderDelegate
           decoration: BoxDecoration(
             border:
                 !selected ? Border.all(color: Colors.white, width: 2.0) : null,
-            color: selected ? themeColor : null,
+            color: selected ? Colors.deepOrangeAccent : null,
             shape: BoxShape.circle,
           ),
           child: AnimatedSwitcher(
@@ -1391,7 +1403,7 @@ class DefaultAssetPickerBuilderDelegate
         );
         final GestureDetector selectorWidget = GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () {
+          onTap: () async {
             if (selected) {
               provider.unSelectAsset(asset);
             } else {
@@ -1399,9 +1411,13 @@ class DefaultAssetPickerBuilderDelegate
                 provider.selectedAssets.clear();
               }
               provider.selectAsset(asset);
+
               if (isSingleAssetMode && !isPreviewEnabled) {
                 Navigator.of(context).pop(provider.selectedAssets);
               }
+
+              selectedImage.value = (await asset.originBytes)!;
+              debugPrint(selectedImage.toString());
             }
           },
           child: Container(
@@ -1483,9 +1499,8 @@ class DefaultAssetPickerBuilderDelegate
             final bool selected = selectedAssets.contains(asset);
             return AnimatedContainer(
               duration: switchingPathDuration,
-              color: selected
-                  ? theme.colorScheme.primary.withOpacity(0.45)
-                  : Colors.black.withOpacity(0.1),
+              color: selected ? theme.colorScheme.primary.withOpacity(0.45) :
+              Colors.black.withOpacity(0.1),
             );
           },
         ),

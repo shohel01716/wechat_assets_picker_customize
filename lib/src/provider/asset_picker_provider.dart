@@ -16,7 +16,7 @@ import '../constants/constants.dart';
 /// how to fetch the next page of assets, how to get the thumb data of a path.
 abstract class AssetPickerProvider<A, P> extends ChangeNotifier {
   AssetPickerProvider({
-    this.maxAssets = 9,
+    this.maxAssets = 10,
     this.pageSize = 320,
     this.pathThumbSize = 80,
     List<A>? selectedAssets,

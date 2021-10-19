@@ -17,7 +17,7 @@ class MultiAssetsPage extends StatefulWidget {
 
 class _MultiAssetsPageState extends State<MultiAssetsPage>
     with AutomaticKeepAliveClientMixin {
-  final int maxAssetsCount = 9;
+  final int maxAssetsCount = 10;
 
   List<AssetEntity> assets = <AssetEntity>[];
 
