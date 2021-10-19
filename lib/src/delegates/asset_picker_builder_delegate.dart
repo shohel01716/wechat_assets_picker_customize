@@ -558,17 +558,8 @@ class DefaultAssetPickerBuilderDelegate
                   ),
                 ),
 
-                InkWell(onTap:(){
-                  //Get.back(result: File(image));
-                },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Done',
-                      style: TextStyle(color: Colors.deepOrangeAccent, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                )
+                confirmButton(context),
+
               ],
             ),
             Divider(),
@@ -969,25 +960,19 @@ class DefaultAssetPickerBuilderDelegate
     return Consumer<DefaultAssetPickerProvider>(
       builder: (_, DefaultAssetPickerProvider provider, __) {
         return MaterialButton(
-          minWidth: provider.isSelectedNotEmpty ? 48.0 : 20.0,
+          //minWidth: 20.0,
           height: appBarItemHeight,
-          padding: const EdgeInsets.symmetric(horizontal: 12.0),
-          color: provider.isSelectedNotEmpty ? themeColor : theme.dividerColor,
+          //padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          /*color: provider.isSelectedNotEmpty ? themeColor : theme.dividerColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(3.0),
-          ),
-          child: Text(
-            provider.isSelectedNotEmpty && !isSingleAssetMode
+          ),*/
+          child: Text("Done",
+            /*provider.isSelectedNotEmpty && !isSingleAssetMode
                 ? '${Constants.textDelegate.confirm}'
                     ' (${provider.selectedAssets.length}/${provider.maxAssets})'
-                : Constants.textDelegate.confirm,
-            style: TextStyle(
-              color: provider.isSelectedNotEmpty
-                  ? theme.textTheme.bodyText1?.color
-                  : theme.textTheme.caption?.color,
-              fontSize: 17.0,
-              fontWeight: FontWeight.normal,
-            ),
+                : Constants.textDelegate.confirm,*/
+            style: TextStyle(color: Colors.deepOrangeAccent, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
           ),
           onPressed: () {
             if (provider.isSelectedNotEmpty) {

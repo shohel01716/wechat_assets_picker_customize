@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     MultiAssetsPage(),
                     SingleAssetPage(),
-                    CustomPickersPage(),
+                    //CustomPickersPage(),
                   ],
                 ),
               ),
@@ -127,11 +127,11 @@ class _HomePageState extends State<HomePage> {
               // ignore: deprecated_member_use
               title: Text('Single'),
             ),
-            BottomNavigationBarItem(
+            /*BottomNavigationBarItem(
               icon: Icon(Icons.explore),
               // ignore: deprecated_member_use
               title: Text('Custom'),
-            ),
+            ),*/
           ],
         ),
       ),

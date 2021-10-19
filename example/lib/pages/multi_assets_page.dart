@@ -29,16 +29,16 @@ class _MultiAssetsPageState extends State<MultiAssetsPage>
 
   List<PickMethod> get pickMethods {
     return <PickMethod>[
-      PickMethod.image(maxAssetsCount),
+      /*PickMethod.image(maxAssetsCount),
       PickMethod.video(maxAssetsCount),
       PickMethod.audio(maxAssetsCount),
       PickMethod.camera(
         maxAssetsCount: maxAssetsCount,
         handleResult: (BuildContext context, AssetEntity result) =>
             Navigator.of(context).pop(<AssetEntity>[...assets, result]),
-      ),
+      ),*/
       PickMethod.common(maxAssetsCount),
-      PickMethod.threeItemsGrid(maxAssetsCount),
+      /*PickMethod.threeItemsGrid(maxAssetsCount),
       PickMethod.customFilterOptions(maxAssetsCount),
       PickMethod.prependItem(maxAssetsCount),
       PickMethod(
@@ -68,7 +68,7 @@ class _MultiAssetsPageState extends State<MultiAssetsPage>
             gridThumbSize: 80,
           );
         },
-      ),
+      ),*/
     ];
   }
 
