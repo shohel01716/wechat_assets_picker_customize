@@ -15,4 +15,4 @@ dependencies:
   photo_manager: ^1.1.6
   provider: ^5.0.0
   video_player: ^2.1.1
-  get: ^4.3.8
+  get: ^4.1.4
