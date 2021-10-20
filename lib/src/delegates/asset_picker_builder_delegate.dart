@@ -543,7 +543,8 @@ class DefaultAssetPickerBuilderDelegate
                 Row(
                   children: <Widget>[
                     InkWell(onTap:(){
-                     // Get.back();
+                      //Get.back(result: 1);
+                      Navigator.of(context).pop();
                     },child: Icon(Icons.clear, color: Colors.black,)),
                   ],
                 ),
