@@ -341,7 +341,8 @@ class DefaultAssetPickerViewerBuilderDelegate
         );
         break;
       case AssetType.video:
-        builder = VideoPageBuilder(asset: asset, state: viewerState);
+        //builder = VideoPageBuilder(asset: asset, state: viewerState);
+        builder = VideoPageBuilder(asset: asset);
         break;
       case AssetType.other:
         builder = Center(

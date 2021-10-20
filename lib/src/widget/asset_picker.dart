@@ -86,6 +86,9 @@ class AssetPicker<A, P> extends StatelessWidget {
           filterOptions: filterOptions,
           routeDuration: routeDuration,
         );
+
+        final AssetPickerViewerState<AssetEntity, AssetPathEntity> state;
+
         final Widget picker =
             ChangeNotifierProvider<DefaultAssetPickerProvider>.value(
           value: provider,

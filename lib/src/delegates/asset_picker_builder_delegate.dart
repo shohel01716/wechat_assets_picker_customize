@@ -7,6 +7,7 @@ import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -527,7 +528,43 @@ class DefaultAssetPickerBuilderDelegate
   bool get isPreviewEnabled => specialPickerType != SpecialPickerType.noPreview;
 
   var selectedImage = Uint8List(1).obs;
-  
+  AssetEntity selectedVIDEO = AssetEntity(id: "1", typeInt: 1, width: 1, height: 1);
+  var selectedMimeType = "".obs;
+
+
+  /// Preview item widgets for images.
+  /// 图片的底部预览部件
+  Widget _imagePreviewItem(AssetEntity asset) {
+    return Positioned.fill(
+      child: RepaintBoundary(
+        child: ExtendedImage(
+          image: AssetEntityImageProvider(asset, isOriginal: false),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  /// Preview item widgets for video.
+  /// 视频的底部预览部件
+  Widget _videoPreviewItem(AssetEntity asset) {
+    return Positioned.fill(
+      child: Stack(
+        children: <Widget>[
+          _imagePreviewItem(asset),
+          Center(
+            child: Icon(
+              Icons.video_library,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //final AssetPickerViewerState<AssetEntity, AssetPathEntity> state;
+
   @override
   Widget androidLayout(BuildContext context) {
 
@@ -572,7 +609,7 @@ class DefaultAssetPickerBuilderDelegate
                 selectedImage.value.length == 1 ? Image.asset("assets/flutter_candies_logo.png", fit: BoxFit.cover,
                     height: MediaQuery.of(context).size.height * 0.45,
                     width: MediaQuery.of(context).size.width)
-                : Image.memory(selectedImage.value, fit: BoxFit.cover,
+                : selectedMimeType.value.contains("video") ? VideoPageBuilder(asset: selectedVIDEO) : Image.memory(selectedImage.value, fit: BoxFit.cover,
                     height: MediaQuery.of(context).size.height * 0.45,
                     width: MediaQuery.of(context).size.width)
             )),
@@ -1403,7 +1440,11 @@ class DefaultAssetPickerBuilderDelegate
               }
 
               selectedImage.value = (await asset.originBytes)!;
-              debugPrint(selectedImage.toString());
+              selectedMimeType.value = asset.mimeType.toString();
+              selectedVIDEO = asset;
+
+              debugPrint(asset.mimeType.toString());
+
             }
           },
           child: Container(

@@ -11,7 +11,7 @@ class VideoPageBuilder extends StatefulWidget {
   const VideoPageBuilder({
     Key? key,
     required this.asset,
-    required this.state,
+    //required this.state,
   }) : super(key: key);
 
   /// Asset currently displayed.
@@ -20,7 +20,7 @@ class VideoPageBuilder extends StatefulWidget {
 
   /// [State] for asset picker viewer.
   /// 资源查看器的状态[State]
-  final AssetPickerViewerState<AssetEntity, AssetPathEntity> state;
+  //final AssetPickerViewerState<AssetEntity, AssetPathEntity> state;
 
   @override
   _VideoPageBuilderState createState() => _VideoPageBuilderState();
@@ -47,11 +47,13 @@ class _VideoPageBuilderState extends State<VideoPageBuilder> {
   /// 播放控制器是否在播放
   bool get isControllerPlaying => _controller.value.isPlaying;
 
-  DefaultAssetPickerViewerBuilderDelegate get builder =>
-      widget.state.builder as DefaultAssetPickerViewerBuilderDelegate;
+  //DefaultAssetPickerViewerBuilderDelegate get builder => widget.state.builder as DefaultAssetPickerViewerBuilderDelegate;
 
   @override
   void initState() {
+
+    //state: state,
+
     super.initState();
     initializeVideoPlayerController();
   }
@@ -110,9 +112,9 @@ class _VideoPageBuilderState extends State<VideoPageBuilder> {
     if (isPlaying.value) {
       _controller.pause();
     } else {
-      if (builder.isDisplayingDetail.value) {
+      /*if (builder.isDisplayingDetail.value) {
         builder.switchDisplayingDetail(value: false);
-      }
+      }*/
       if (_controller.value.duration == _controller.value.position) {
         _controller
           ..seekTo(Duration.zero)
@@ -146,7 +148,8 @@ class _VideoPageBuilderState extends State<VideoPageBuilder> {
           valueListenable: isPlaying,
           builder: (_, bool value, __) => GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: value ? playButtonCallback : builder.switchDisplayingDetail,
+            onTap: playButtonCallback,
+            //onTap: value ? playButtonCallback : builder.switchDisplayingDetail,
             child: Center(
               child: AnimatedOpacity(
                 duration: kThemeAnimationDuration,
