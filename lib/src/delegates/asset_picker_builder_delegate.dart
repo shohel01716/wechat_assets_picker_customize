@@ -281,6 +281,7 @@ abstract class AssetPickerBuilderDelegate<A, P> {
                 ),
                 childCount: assetsGridItemCount(_, currentAssets),
                 findChildIndexCallback: (Key? key) {
+
                   if (key is ValueKey<String>) {
                     return findChildIndexBuilder(
                       key.value,
@@ -606,7 +607,7 @@ class DefaultAssetPickerBuilderDelegate
                 height: MediaQuery.of(context).size.height * 0.45,
                 child: //image != null
                     //? Image.file(File(image), fit: BoxFit.cover,
-                selectedImage.value.length == 1 ? Image.asset("assets/flutter_candies_logo.png", fit: BoxFit.cover,
+                selectedImage.value.length == 1 ? Image.asset("assets/images/splash_v3.png", fit: BoxFit.cover,
                     height: MediaQuery.of(context).size.height * 0.45,
                     width: MediaQuery.of(context).size.width)
                 : selectedMimeType.value.contains("video") ? VideoPageBuilder(asset: selectedVIDEO) : Image.memory(selectedImage.value, fit: BoxFit.cover,
@@ -878,7 +879,9 @@ class DefaultAssetPickerBuilderDelegate
         break;
       case AssetType.image:
       case AssetType.video:
+
         builder = imageAndVideoItemBuilder(context, currentIndex, asset);
+
         break;
       case AssetType.other:
         builder = const SizedBox.shrink();
@@ -1029,6 +1032,17 @@ class DefaultAssetPickerBuilderDelegate
     int index,
     AssetEntity asset,
   ) {
+
+    //selected first item shohel
+    if(index == 0){
+
+      debugPrint(">>>>>>>>>>>>>>>>>>>>"+asset.relativePath.toString());
+      
+      // selectedImage.value = asset.originBytes;
+      // selectedMimeType.value = asset.mimeType.toString();
+      // selectedVIDEO = asset;
+    }
+
     final AssetEntityImageProvider imageProvider = AssetEntityImageProvider(
       asset,
       isOriginal: false,
