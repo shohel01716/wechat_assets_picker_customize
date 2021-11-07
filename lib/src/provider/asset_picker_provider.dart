@@ -28,7 +28,7 @@ abstract class AssetPickerProvider<A, P> extends ChangeNotifier {
 
   /// Maximum count for asset selection.
   /// 资源选择的最大数量
-  final int maxAssets;
+  int maxAssets;
 
   /// Assets should be loaded per page.
   /// 资源选择的最大数量
