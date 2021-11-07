@@ -538,7 +538,7 @@ class DefaultAssetPickerBuilderDelegate
   AssetEntity selectedVIDEO =
   AssetEntity(id: "1", typeInt: 1, width: 1, height: 1);
   var selectedMimeType = "".obs;
-  var isMultiSelect = false.obs;
+  var isMultiSelect = true.obs;
 
   /// Preview item widgets for images.
   /// 图片的底部预览部件
