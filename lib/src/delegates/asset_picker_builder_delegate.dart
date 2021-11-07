@@ -11,20 +11,22 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:wechat_assets_picker/wechat_assets_picker.dart';
+import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 
 import '../constants/constants.dart';
 import '../widget/builder/asset_entity_grid_item_builder.dart';
 
 typedef IndicatorBuilder = Widget Function(
-  BuildContext context,
-  bool isAssetsEmpty,
-);
+    BuildContext context,
+    bool isAssetsEmpty,
+    );
 
 /// The delegate to build the whole picker's components.
 ///
 /// By extending the delegate, you can customize every components on you own.
 /// Delegate requires two generic types:
-///  * [A] "Asset": The type of your assets. Defaults to [AssetEntity].
+///  *  The type of your assets. Defaults to [AssetEntity].
 ///  * [P] "Path": The type of your paths. Defaults to [AssetPathEntity].
 abstract class AssetPickerBuilderDelegate<A, P> {
   AssetPickerBuilderDelegate({
@@ -38,9 +40,9 @@ abstract class AssetPickerBuilderDelegate<A, P> {
     this.loadingIndicatorBuilder,
     this.allowSpecialItemWhenEmpty = false,
   })  : assert(
-          pickerTheme == null || themeColor == null,
-          'Theme and theme color cannot be set at the same time.',
-        ),
+  pickerTheme == null || themeColor == null,
+  'Theme and theme color cannot be set at the same time.',
+  ),
         themeColor =
             pickerTheme?.colorScheme.secondary ?? themeColor ?? C.themeColor {
     Constants.textDelegate = textDelegate ?? DefaultAssetsPickerTextDelegate();
@@ -96,9 +98,9 @@ abstract class AssetPickerBuilderDelegate<A, P> {
   /// 根据主题返回状态栏的明暗样式
   SystemUiOverlayStyle get overlayStyle =>
       theme.appBarTheme.systemOverlayStyle ??
-      (theme.effectiveBrightness.isDark
-          ? SystemUiOverlayStyle.light
-          : SystemUiOverlayStyle.dark);
+          (theme.effectiveBrightness.isDark
+              ? SystemUiOverlayStyle.light
+              : SystemUiOverlayStyle.dark);
 
   /// Whether the current platform is Apple OS.
   /// 当前平台是否苹果系列系统 (iOS & MacOS)
@@ -107,6 +109,11 @@ abstract class AssetPickerBuilderDelegate<A, P> {
   /// Whether the picker is under the single asset mode.
   /// 选择器是否为单选模式
   bool get isSingleAssetMode => provider.maxAssets == 1;
+
+  set isSingleAssetMode(bool value) {
+    isSingleAssetMode = value;
+    //provider.maxAssets = 1;
+  }
 
   /// Space between assets item widget.
   /// 资源部件之间的间隔
@@ -173,9 +180,9 @@ abstract class AssetPickerBuilderDelegate<A, P> {
           padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
           decoration: !isAppleOS
               ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(2.0),
-                  color: theme.iconTheme.color!.withOpacity(0.75),
-                )
+            borderRadius: BorderRadius.circular(2.0),
+            color: theme.iconTheme.color!.withOpacity(0.75),
+          )
               : null,
           child: Text(
             Constants.textDelegate.gifIndicator,
@@ -207,10 +214,10 @@ abstract class AssetPickerBuilderDelegate<A, P> {
   /// Animated backdrop widget for items.
   /// 部件选中时的动画遮罩部件
   Widget selectedBackdrop(
-    BuildContext context,
-    int index,
-    A asset,
-  );
+      BuildContext context,
+      int index,
+      A asset,
+      );
 
   /// Indicator for assets selected status.
   /// 资源是否已选的指示器
@@ -222,7 +229,7 @@ abstract class AssetPickerBuilderDelegate<A, P> {
     return Center(
       child: Selector<AssetPickerProvider<A, P>, bool>(
         selector: (_, AssetPickerProvider<A, P> provider) =>
-            provider.isAssetsEmpty,
+        provider.isAssetsEmpty,
         builder: (BuildContext c, bool isAssetsEmpty, Widget? w) {
           if (loadingIndicatorBuilder != null) {
             return loadingIndicatorBuilder!(c, isAssetsEmpty);
@@ -260,7 +267,7 @@ abstract class AssetPickerBuilderDelegate<A, P> {
       color: theme.canvasColor,
       child: Selector<AssetPickerProvider<A, P>, List<A>>(
         selector: (_, AssetPickerProvider<A, P> provider) =>
-            provider.currentAssets,
+        provider.currentAssets,
         builder: (_, List<A> currentAssets, __) => CustomScrollView(
           controller: gridScrollController,
           slivers: <Widget>[
@@ -272,7 +279,7 @@ abstract class AssetPickerBuilderDelegate<A, P> {
               ),
             SliverGrid(
               delegate: SliverChildBuilderDelegate(
-                (_, int index) => Builder(
+                    (_, int index) => Builder(
                   builder: (BuildContext c) => assetGridItemBuilder(
                     c,
                     index,
@@ -319,26 +326,26 @@ abstract class AssetPickerBuilderDelegate<A, P> {
   /// The item builder for the assets' grid.
   /// 资源列表项的构建
   Widget assetGridItemBuilder(
-    BuildContext context,
-    int index,
-    List<A> currentAssets,
-  );
+      BuildContext context,
+      int index,
+      List<A> currentAssets,
+      );
 
   /// The item builder for audio type of asset.
   /// 音频资源的部件构建
   Widget audioItemBuilder(
-    BuildContext context,
-    int index,
-    A asset,
-  );
+      BuildContext context,
+      int index,
+      A asset,
+      );
 
   /// The item builder for images and video type of asset.
   /// 图片和视频资源的部件构建
   Widget imageAndVideoItemBuilder(
-    BuildContext context,
-    int index,
-    A asset,
-  );
+      BuildContext context,
+      int index,
+      A asset,
+      );
 
   /// Preview button to preview selected assets.
   /// 预览已选资源的按钮
@@ -456,20 +463,20 @@ class DefaultAssetPickerBuilderDelegate
     this.previewThumbSize,
     this.specialPickerType,
   })  : assert(
-          pickerTheme == null || themeColor == null,
-          'Theme and theme color cannot be set at the same time.',
-        ),
+  pickerTheme == null || themeColor == null,
+  'Theme and theme color cannot be set at the same time.',
+  ),
         super(
-          provider: provider,
-          gridCount: gridCount,
-          themeColor: themeColor,
-          textDelegate: textDelegate,
-          pickerTheme: pickerTheme,
-          specialItemPosition: specialItemPosition,
-          specialItemBuilder: specialItemBuilder,
-          loadingIndicatorBuilder: loadingIndicatorBuilder,
-          allowSpecialItemWhenEmpty: allowSpecialItemWhenEmpty,
-        );
+        provider: provider,
+        gridCount: gridCount,
+        themeColor: themeColor,
+        textDelegate: textDelegate,
+        pickerTheme: pickerTheme,
+        specialItemPosition: specialItemPosition,
+        specialItemBuilder: specialItemBuilder,
+        loadingIndicatorBuilder: loadingIndicatorBuilder,
+        allowSpecialItemWhenEmpty: allowSpecialItemWhenEmpty,
+      );
 
   /// Thumbnail size in the grid.
   /// 预览时网络的缩略图大小
@@ -528,9 +535,10 @@ class DefaultAssetPickerBuilderDelegate
   bool get isPreviewEnabled => specialPickerType != SpecialPickerType.noPreview;
 
   var selectedImage = Uint8List(1).obs;
-  AssetEntity selectedVIDEO = AssetEntity(id: "1", typeInt: 1, width: 1, height: 1);
+  AssetEntity selectedVIDEO =
+  AssetEntity(id: "1", typeInt: 1, width: 1, height: 1);
   var selectedMimeType = "".obs;
-
+  var isMultiSelect = false.obs;
 
   /// Preview item widgets for images.
   /// 图片的底部预览部件
@@ -567,61 +575,62 @@ class DefaultAssetPickerBuilderDelegate
 
   @override
   Widget androidLayout(BuildContext context) {
-
-    
     return Container(
-          margin: const EdgeInsets.only(top: 40),
+      margin: const EdgeInsets.only(top: 40),
       child: Column(
-          children: [
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    InkWell(onTap:(){
-                      //Get.back(result: 1);
-                      Navigator.of(context).pop();
-                    },child: Icon(Icons.clear, color: Colors.black,)),
-                  ],
-                ),
-
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Select Media',
-                      style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  InkWell(
+                      onTap: () {
+                        //Get.back(result: 1);
+                        Navigator.of(context).pop();
+                      },
+                      child: Icon(
+                        Icons.clear,
+                        color: Colors.black,
+                      )),
+                ],
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Select Media',
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                 ),
-
-                confirmButton(context),
-
-              ],
-            ),
-            Divider(),
-
-            Obx(() => Container(
-                height: MediaQuery.of(context).size.height * 0.45,
-                child: //image != null
-                    //? Image.file(File(image), fit: BoxFit.cover,
-                selectedImage.value.length == 1 ? Image.asset("assets/flutter_candies_logo.png", fit: BoxFit.cover,
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: MediaQuery.of(context).size.width)
-                : selectedMimeType.value.contains("video") ? VideoPageBuilder(asset: selectedVIDEO) : Image.memory(selectedImage.value, fit: BoxFit.cover,
-                    height: MediaQuery.of(context).size.height * 0.45,
-                    width: MediaQuery.of(context).size.width)
-            )),
-
-            SizedBox(height: 10),
-
-            Container(
-              height: 56,
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                children: <Widget>[
-                  /*Container(
+              ),
+              confirmButton(context),
+            ],
+          ),
+          Divider(),
+          Obx(() => Container(
+              height: MediaQuery.of(context).size.height * 0.45,
+              child: //image != null
+              //? Image.file(File(image), fit: BoxFit.cover,
+              selectedImage.value.length == 1
+                  ? Image.asset("assets/images/splash_v3.png",
+                  fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width)
+                  : selectedMimeType.value.contains("video")
+                  ? VideoPageBuilder(asset: selectedVIDEO)
+                  : Image.memory(selectedImage.value,
+                  fit: BoxFit.cover,
+                  height: MediaQuery.of(context).size.height * 0.45,
+                  width: MediaQuery.of(context).size.width))),
+          SizedBox(height: 10),
+          Container(
+            height: 56,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              children: <Widget>[
+                /*Container(
                     width: 150,
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -633,7 +642,7 @@ class DefaultAssetPickerBuilderDelegate
                     ),
                     child: pathEntitySelector(context)
                     //appBar(context),
-                    *//*child: DropdownButtonHideUnderline(
+                    */ /*child: DropdownButtonHideUnderline(
                         child: SizedBox(
                           width: 120,
                           child: DropdownButton<FileModel>(
@@ -649,91 +658,122 @@ class DefaultAssetPickerBuilderDelegate
                             },
                             value: selectedModel,
                           ),
-                        )),*//*
+                        )),*/ /*
                   ),*/
 
-                  pathEntitySelector(context),
+                pathEntitySelector(context),
+                Spacer(),
+                InkWell(
+                  onTap: () {
+                    if (isSingleAssetMode) {
+                      provider.maxAssets = 10;
+                      provider.selectedAssets.clear();
+                      isMultiSelect.value = true;
+                    } else {
+                      provider.maxAssets = 1;
+                      provider.selectedAssets.clear();
+                      isMultiSelect.value = false;
+                    }
+                    provider.notifyListeners();
 
-                  Spacer(),
-
-                  InkWell(
-                    onTap: (){
-
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: Colors.deepOrangeAccent,
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.all(Radius.circular(7))
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Icon(Icons.copy, size: 18, color: Colors.white,),
-                          SizedBox(width: 5,),
-                          Text("Select Multiple", style: TextStyle(color: Colors.white))
-                        ],
-                      ),
+                  },
+                  child: Obx(() => Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: isMultiSelect.value ? Colors.deepOrangeAccent : Colors.white,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                        border: Border.all(
+                            color: isMultiSelect.value ? Colors.white : Colors.grey.shade300, width: 2.0)),
+                    child: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.copy,
+                          size: 18,
+                          color: isMultiSelect.value ? Colors.white : Colors.black54,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text("Select Multiple",
+                            style: TextStyle(color: isMultiSelect.value ? Colors.white : Colors.black54))
+                      ],
                     ),
-                  ),
+                  )),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                InkWell(
+                  onTap: () async {
 
-                  SizedBox(width: 10,),
+                    final AssetEntity? entity = await CameraPicker.pickFromCamera(context);
 
-                  Container(
+                    if(entity != null){
+                      selectedMimeType.value ="images";
+                      selectedImage.value = (await entity.originBytes)!;
+                    }
+
+                    provider.getAssetPathList();
+                    provider.pathEntityList;
+                    provider.selectedAssets.add(entity!);
+                    provider.notifyListeners();
+
+                  },
+                  child: Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: 2.0
-                        )
+                            color: Colors.grey.shade300, width: 2.0)),
+                    child: Icon(
+                      Icons.add_a_photo_outlined,
+                      size: 18,
+                      color: Colors.deepOrangeAccent,
                     ),
-                    child: Icon(Icons.add_a_photo_outlined, size: 18, color: Colors.deepOrangeAccent,),
-
                   ),
-
-                  SizedBox(width: 5),
-
-                ],
-              ),
+                ),
+                SizedBox(width: 5),
+              ],
             ),
-
-            SizedBox(height: 10,),
-
-            SizedBox(
-              height: 278,
-              child: Selector<DefaultAssetPickerProvider, bool>(
-                selector: (_, DefaultAssetPickerProvider provider) =>
-                    provider.hasAssetsToDisplay,
-                builder: (_, bool hasAssetsToDisplay, __) {
-                  final bool shouldDisplayAssets = hasAssetsToDisplay ||
-                      (allowSpecialItemWhenEmpty &&
-                          specialItemPosition != SpecialItemPosition.none);
-                  return AnimatedSwitcher(
-                    duration: switchingPathDuration,
-                    child: shouldDisplayAssets
-                        ? Stack(
-                            children: <Widget>[
-                              RepaintBoundary(
-                                child: Column(
-                                  children: <Widget>[
-                                    Expanded(child: assetsGridBuilder(context)),
-                                    /*if (!isSingleAssetMode && isPreviewEnabled)
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            height: 278,
+            child: Selector<DefaultAssetPickerProvider, bool>(
+              selector: (_, DefaultAssetPickerProvider provider) =>
+              provider.hasAssetsToDisplay,
+              builder: (_, bool hasAssetsToDisplay, __) {
+                final bool shouldDisplayAssets = hasAssetsToDisplay ||
+                    (allowSpecialItemWhenEmpty &&
+                        specialItemPosition != SpecialItemPosition.none);
+                return AnimatedSwitcher(
+                  duration: switchingPathDuration,
+                  child: shouldDisplayAssets
+                      ? Stack(
+                    children: <Widget>[
+                      RepaintBoundary(
+                        child: Column(
+                          children: <Widget>[
+                            Expanded(child: assetsGridBuilder(context)),
+                            /*if (!isSingleAssetMode && isPreviewEnabled)
                                       bottomActionBar(context),*/
-                                  ],
-                                ),
-                              ),
-                              pathEntityListBackdrop(context),
-                              pathEntityListWidget(context),
-                            ],
-                          )
-                        : loadingIndicator(context),
-                  );
-                },
-              ),
+                          ],
+                        ),
+                      ),
+                      pathEntityListBackdrop(context),
+                      pathEntityListWidget(context),
+                    ],
+                  )
+                      : loadingIndicator(context),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -772,26 +812,26 @@ class DefaultAssetPickerBuilderDelegate
               duration: switchingPathDuration,
               child: hasAssetsToDisplay
                   ? Stack(
+                children: <Widget>[
+                  RepaintBoundary(
+                    child: Stack(
                       children: <Widget>[
-                        RepaintBoundary(
-                          child: Stack(
-                            children: <Widget>[
-                              Positioned.fill(
-                                child: assetsGridBuilder(context),
-                              ),
-                              if ((!isSingleAssetMode || isAppleOS) &&
-                                  isPreviewEnabled)
-                                PositionedDirectional(
-                                  bottom: 0.0,
-                                  child: bottomActionBar(context),
-                                ),
-                            ],
-                          ),
+                        Positioned.fill(
+                          child: assetsGridBuilder(context),
                         ),
-                        pathEntityListBackdrop(context),
-                        pathEntityListWidget(context),
+                        if ((!isSingleAssetMode || isAppleOS) &&
+                            isPreviewEnabled)
+                          PositionedDirectional(
+                            bottom: 0.0,
+                            child: bottomActionBar(context),
+                          ),
                       ],
-                    )
+                    ),
+                  ),
+                  pathEntityListBackdrop(context),
+                  pathEntityListWidget(context),
+                ],
+              )
                   : loadingIndicator(context),
             ),
           ),
@@ -820,13 +860,13 @@ class DefaultAssetPickerBuilderDelegate
   ///  * 在索引到达倒数第三列的时候加载更多资源。
   @override
   Widget assetGridItemBuilder(
-    BuildContext context,
-    int index,
-    List<AssetEntity> currentAssets,
-  ) {
+      BuildContext context,
+      int index,
+      List<AssetEntity> currentAssets,
+      ) {
     final AssetPathEntity? currentPathEntity =
-        context.select<DefaultAssetPickerProvider, AssetPathEntity?>(
-      (DefaultAssetPickerProvider p) => p.currentPathEntity,
+    context.select<DefaultAssetPickerProvider, AssetPathEntity?>(
+          (DefaultAssetPickerProvider p) => p.currentPathEntity,
     );
 
     int currentIndex;
@@ -865,7 +905,7 @@ class DefaultAssetPickerBuilderDelegate
 
     if (index == _length - gridCount * 3 &&
         context.select<DefaultAssetPickerProvider, bool>(
-          (DefaultAssetPickerProvider p) => p.hasMoreToLoad,
+              (DefaultAssetPickerProvider p) => p.hasMoreToLoad,
         )) {
       provider.loadMoreAssets();
     }
@@ -905,12 +945,12 @@ class DefaultAssetPickerBuilderDelegate
 
   @override
   int assetsGridItemCount(
-    BuildContext context,
-    List<AssetEntity> currentAssets,
-  ) {
+      BuildContext context,
+      List<AssetEntity> currentAssets,
+      ) {
     final AssetPathEntity? currentPathEntity =
-        context.select<DefaultAssetPickerProvider, AssetPathEntity?>(
-      (DefaultAssetPickerProvider p) => p.currentPathEntity,
+    context.select<DefaultAssetPickerProvider, AssetPathEntity?>(
+          (DefaultAssetPickerProvider p) => p.currentPathEntity,
     );
 
     if (currentPathEntity == null &&
@@ -1005,12 +1045,16 @@ class DefaultAssetPickerBuilderDelegate
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(3.0),
           ),*/
-          child: Text("Done",
+          child: Text(
+            "Done",
             /*provider.isSelectedNotEmpty && !isSingleAssetMode
                 ? '${Constants.textDelegate.confirm}'
                     ' (${provider.selectedAssets.length}/${provider.maxAssets})'
                 : Constants.textDelegate.confirm,*/
-            style: TextStyle(color: Colors.deepOrangeAccent, fontStyle: FontStyle.italic, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Colors.deepOrangeAccent,
+                fontStyle: FontStyle.italic,
+                fontWeight: FontWeight.bold),
           ),
           onPressed: () {
             if (provider.isSelectedNotEmpty) {
@@ -1025,10 +1069,10 @@ class DefaultAssetPickerBuilderDelegate
 
   @override
   Widget imageAndVideoItemBuilder(
-    BuildContext context,
-    int index,
-    AssetEntity asset,
-  ) {
+      BuildContext context,
+      int index,
+      AssetEntity asset,
+      ) {
     final AssetEntityImageProvider imageProvider = AssetEntityImageProvider(
       asset,
       isOriginal: false,
@@ -1112,30 +1156,30 @@ class DefaultAssetPickerBuilderDelegate
       selector: (_, DefaultAssetPickerProvider p) => p.isSwitchingPath,
       builder: (_, bool isSwitchingPath, Widget? w) =>
           AnimatedPositionedDirectional(
-        duration: switchingPathDuration,
-        curve: switchingPathCurve,
-        top: isAppleOS
-            ? !isSwitchingPath
+            duration: switchingPathDuration,
+            curve: switchingPathCurve,
+            top: isAppleOS
+                ? !isSwitchingPath
                 ? -maxHeight
                 : appBarHeight
-            : -(!isSwitchingPath ? maxHeight : 1.0),
-        child: AnimatedOpacity(
-          duration: switchingPathDuration,
-          curve: switchingPathCurve,
-          opacity: !isAppleOS || isSwitchingPath ? 1.0 : 0.0,
-          child: Container(
-            width: Screens.width,
-            height: maxHeight,
-            decoration: BoxDecoration(
-              borderRadius: isAppleOS
-                  ? const BorderRadius.vertical(bottom: Radius.circular(10.0))
-                  : null,
-              color: theme.colorScheme.background,
+                : -(!isSwitchingPath ? maxHeight : 1.0),
+            child: AnimatedOpacity(
+              duration: switchingPathDuration,
+              curve: switchingPathCurve,
+              opacity: !isAppleOS || isSwitchingPath ? 1.0 : 0.0,
+              child: Container(
+                width: Screens.width,
+                height: maxHeight,
+                decoration: BoxDecoration(
+                  borderRadius: isAppleOS
+                      ? const BorderRadius.vertical(bottom: Radius.circular(10.0))
+                      : null,
+                  color: theme.colorScheme.background,
+                ),
+                child: w,
+              ),
             ),
-            child: w,
           ),
-        ),
-      ),
       child: Selector<DefaultAssetPickerProvider, int>(
         selector: (_, DefaultAssetPickerProvider p) => p.validPathThumbCount,
         builder: (_, int count, __) => Selector<DefaultAssetPickerProvider,
@@ -1174,11 +1218,7 @@ class DefaultAssetPickerBuilderDelegate
           padding: const EdgeInsetsDirectional.only(start: 12.0, end: 6.0),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              border: Border.all(
-                  color: Colors.grey.shade300,
-                  width: 2.0
-              )
-          ),
+              border: Border.all(color: Colors.grey.shade300, width: 2.0)),
           child: Selector<DefaultAssetPickerProvider, AssetPathEntity?>(
             selector: (_, DefaultAssetPickerProvider p) => p.currentPathEntity,
             builder: (_, AssetPathEntity? p, Widget? w) => Row(
@@ -1189,10 +1229,9 @@ class DefaultAssetPickerBuilderDelegate
                     child: Text(
                       p.name,
                       style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black
-                      ),
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -1202,22 +1241,21 @@ class DefaultAssetPickerBuilderDelegate
             ),
             child: Padding(
               padding: const EdgeInsetsDirectional.only(start: 5.0),
-                child: Selector<DefaultAssetPickerProvider, bool>(
-                  selector: (_, DefaultAssetPickerProvider p) =>
-                      p.isSwitchingPath,
-                  builder: (_, bool isSwitchingPath, Widget? w) =>
-                      Transform.rotate(
-                    angle: isSwitchingPath ? math.pi : 0.0,
-                    alignment: Alignment.center,
-                    child: w,
-                  ),
-                  child: Icon(
-                    Icons.keyboard_arrow_down,
-                    size: 20.0,
-                    color: Colors.black,
-                  ),
+              child: Selector<DefaultAssetPickerProvider, bool>(
+                selector: (_, DefaultAssetPickerProvider p) =>
+                p.isSwitchingPath,
+                builder: (_, bool isSwitchingPath, Widget? w) =>
+                    Transform.rotate(
+                      angle: isSwitchingPath ? math.pi : 0.0,
+                      alignment: Alignment.center,
+                      child: w,
+                    ),
+                child: Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 20.0,
+                  color: Colors.black,
                 ),
-
+              ),
             ),
           ),
         ),
@@ -1286,7 +1324,8 @@ class DefaultAssetPickerBuilderDelegate
                           padding: const EdgeInsetsDirectional.only(end: 10.0),
                           child: Text(
                             pathEntity.name,
-                            style: const TextStyle(fontSize: 18.0, color:  Colors.black),
+                            style: const TextStyle(
+                                fontSize: 18.0, color: Colors.black),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1307,14 +1346,15 @@ class DefaultAssetPickerBuilderDelegate
               ),
               Selector<DefaultAssetPickerProvider, AssetPathEntity?>(
                 selector: (_, DefaultAssetPickerProvider p) =>
-                    p.currentPathEntity,
+                p.currentPathEntity,
                 builder: (_, AssetPathEntity? currentPathEntity, __) {
                   if (currentPathEntity != pathEntity) {
                     return const SizedBox.shrink();
                   } else {
                     return AspectRatio(
                       aspectRatio: 1.0,
-                      child: Icon(Icons.check, color: Colors.deepOrangeAccent, size: 26.0),
+                      child: Icon(Icons.check,
+                          color: Colors.deepOrangeAccent, size: 26.0),
                     );
                   }
                 },
@@ -1345,7 +1385,7 @@ class DefaultAssetPickerBuilderDelegate
               _selected = provider.selectedAssets;
             }
             final List<AssetEntity>? result =
-                await AssetPickerViewer.pushToViewer(
+            await AssetPickerViewer.pushToViewer(
               context,
               currentIndex: 0,
               previewAssets: _selected,
@@ -1361,13 +1401,13 @@ class DefaultAssetPickerBuilderDelegate
           },
           child: Selector<DefaultAssetPickerProvider, String>(
             selector: (_, DefaultAssetPickerProvider p) =>
-                p.selectedDescriptions,
+            p.selectedDescriptions,
             builder: (_, __, ___) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Text(
                 isSelectedNotEmpty
                     ? '${Constants.textDelegate.preview}'
-                        ' (${provider.selectedAssets.length})'
+                    ' (${provider.selectedAssets.length})'
                     : Constants.textDelegate.preview,
                 style: TextStyle(
                   color: isSelectedNotEmpty
@@ -1389,8 +1429,8 @@ class DefaultAssetPickerBuilderDelegate
       selector: (_, DefaultAssetPickerProvider p) => p.selectedDescriptions,
       builder: (BuildContext context, _, __) {
         final List<AssetEntity> selectedAssets =
-            context.select<DefaultAssetPickerProvider, List<AssetEntity>>(
-          (DefaultAssetPickerProvider p) => p.selectedAssets,
+        context.select<DefaultAssetPickerProvider, List<AssetEntity>>(
+              (DefaultAssetPickerProvider p) => p.selectedAssets,
         );
         final bool selected = selectedAssets.contains(asset);
         final double indicatorSize = Screens.width / gridCount / 3;
@@ -1400,7 +1440,7 @@ class DefaultAssetPickerBuilderDelegate
           height: indicatorSize / (isAppleOS ? 1.25 : 1.5),
           decoration: BoxDecoration(
             border:
-                !selected ? Border.all(color: Colors.white, width: 2.0) : null,
+            !selected ? Border.all(color: Colors.white, width: 2.0) : null,
             color: selected ? Colors.deepOrangeAccent : null,
             shape: BoxShape.circle,
           ),
@@ -1409,18 +1449,18 @@ class DefaultAssetPickerBuilderDelegate
             reverseDuration: switchingPathDuration,
             child: selected
                 ? isSingleAssetMode
-                    ? const Icon(Icons.check, size: 18.0)
-                    : Text(
-                        '${selectedAssets.indexOf(asset) + 1}',
-                        style: TextStyle(
-                          color: selected
-                              ? theme.textTheme.bodyText1?.color
-                              : null,
-                          fontSize: isAppleOS ? 16.0 : 14.0,
-                          fontWeight:
-                              isAppleOS ? FontWeight.w600 : FontWeight.bold,
-                        ),
-                      )
+                ? const Icon(Icons.check, size: 18.0)
+                : Text(
+              '${selectedAssets.indexOf(asset) + 1}',
+              style: TextStyle(
+                color: selected
+                    ? theme.textTheme.bodyText1?.color
+                    : null,
+                fontSize: isAppleOS ? 16.0 : 14.0,
+                fontWeight:
+                isAppleOS ? FontWeight.w600 : FontWeight.bold,
+              ),
+            )
                 : const SizedBox.shrink(),
           ),
         );
@@ -1444,7 +1484,6 @@ class DefaultAssetPickerBuilderDelegate
               selectedVIDEO = asset;
 
               debugPrint(asset.mimeType.toString());
-
             }
           },
           child: Container(
@@ -1505,7 +1544,7 @@ class DefaultAssetPickerBuilderDelegate
             _index = index;
           }
           final List<AssetEntity>? result =
-              await AssetPickerViewer.pushToViewer(
+          await AssetPickerViewer.pushToViewer(
             context,
             currentIndex: _index,
             previewAssets: _current,
@@ -1526,8 +1565,9 @@ class DefaultAssetPickerBuilderDelegate
             final bool selected = selectedAssets.contains(asset);
             return AnimatedContainer(
               duration: switchingPathDuration,
-              color: selected ? theme.colorScheme.primary.withOpacity(0.45) :
-              Colors.black.withOpacity(0.1),
+              color: selected
+                  ? theme.colorScheme.primary.withOpacity(0.45)
+                  : Colors.black.withOpacity(0.1),
             );
           },
         ),
