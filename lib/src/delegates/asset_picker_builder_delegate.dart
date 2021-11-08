@@ -689,14 +689,14 @@ class DefaultAssetPickerBuilderDelegate
                       children: <Widget>[
                         Icon(
                           Icons.copy,
-                          size: 18,
+                          size: 15,
                           color: isMultiSelect.value ? Colors.white : Colors.black54,
                         ),
                         SizedBox(
                           width: 5,
                         ),
                         Text("Select Multiple",
-                            style: TextStyle(color: isMultiSelect.value ? Colors.white : Colors.black54))
+                            style: TextStyle(color: isMultiSelect.value ? Colors.white : Colors.black54, fontSize: 12))
                       ],
                     ),
                   )),
@@ -707,7 +707,7 @@ class DefaultAssetPickerBuilderDelegate
                 InkWell(
                   onTap: () async {
 
-                    final AssetEntity? entity = await CameraPicker.pickFromCamera(context);
+                    final AssetEntity? entity = await CameraPicker.pickFromCamera(context,textDelegate: EnglishCameraPickerTextDelegate ());
 
                     if(entity != null){
                       selectedMimeType.value ="images";
@@ -721,14 +721,14 @@ class DefaultAssetPickerBuilderDelegate
 
                   },
                   child: Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(9),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         border: Border.all(
                             color: Colors.grey.shade300, width: 2.0)),
                     child: Icon(
                       Icons.add_a_photo_outlined,
-                      size: 18,
+                      size: 15,
                       color: Colors.deepOrangeAccent,
                     ),
                   ),
@@ -1229,7 +1229,7 @@ class DefaultAssetPickerBuilderDelegate
                     child: Text(
                       p.name,
                       style: const TextStyle(
-                          fontSize: 18.0,
+                          fontSize: 12.0,
                           fontWeight: FontWeight.normal,
                           color: Colors.black),
                       maxLines: 1,
