@@ -439,7 +439,8 @@ abstract class AssetPickerBuilderDelegate<A, P> {
           value: provider,
           child: Material(
             color: theme.canvasColor,
-            child: isAppleOS ? appleOSLayout(context) : androidLayout(context),
+            //child: isAppleOS ? appleOSLayout(context) : androidLayout(context),
+            child: androidLayout(context),
           ),
         ),
       ),
