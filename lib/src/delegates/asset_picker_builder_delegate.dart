@@ -274,7 +274,8 @@ abstract class AssetPickerBuilderDelegate<A, P> {
             if (isAppleOS)
               SliverToBoxAdapter(
                 child: SizedBox(
-                  height: Screens.topSafeHeight + kToolbarHeight,
+                  //height: Screens.topSafeHeight + kToolbarHeight,
+                  height: 0,
                 ),
               ),
             SliverGrid(
@@ -1149,7 +1150,8 @@ class DefaultAssetPickerBuilderDelegate
 
   @override
   Widget pathEntityListWidget(BuildContext context) {
-    final double appBarHeight = kToolbarHeight + Screens.topSafeHeight;
+    //final double appBarHeight = kToolbarHeight + Screens.topSafeHeight;
+    final double appBarHeight = 0 +0;
     final double maxHeight = Screens.height * 0.825;
     final bool isAudio = (provider as DefaultAssetPickerProvider).requestType ==
         RequestType.audio;
