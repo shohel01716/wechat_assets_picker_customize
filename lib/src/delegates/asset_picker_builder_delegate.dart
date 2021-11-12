@@ -15,6 +15,7 @@ import 'package:wechat_assets_picker/wechat_assets_picker.dart';
 import 'package:wechat_camera_picker/wechat_camera_picker.dart';
 
 import '../constants/constants.dart';
+import '../constants/screens.dart';
 import '../widget/builder/asset_entity_grid_item_builder.dart';
 
 typedef IndicatorBuilder = Widget Function(
@@ -743,7 +744,7 @@ class DefaultAssetPickerBuilderDelegate
             height: 10,
           ),
           SizedBox(
-            height: 278,
+            height: isAppleOS ? Screens.height * 0.32 : 278,
             child: Selector<DefaultAssetPickerProvider, bool>(
               selector: (_, DefaultAssetPickerProvider provider) =>
               provider.hasAssetsToDisplay,
